@@ -6,7 +6,7 @@ import BookingModal from '../components/BookingModal'
 import { motion } from 'framer-motion'
 import { Palette, Users, Award, Heart } from 'lucide-react'
 
-// ⬇️ Keep all your logic exactly as you had it
+
 export default function HomeClient() {
   const [workshops, setWorkshops] = useState([])
   const [selectedWorkshop, setSelectedWorkshop] = useState(null)
@@ -17,14 +17,24 @@ export default function HomeClient() {
   }, [])
 
   const fetchWorkshops = async () => {
-    try {
-      const response = await fetch('/api/workshops')
-      const data = await response.json()
+  try {
+    const response = await fetch('/api/workshops')
+    const data = await response.json()
+
+    console.log('Fetched workshops:', data) 
+
+    
+    if (Array.isArray(data)) {
       setWorkshops(data)
-    } catch (error) {
-      console.error('Error fetching workshops:', error)
+    } else {
+      console.error('Expected an array but got:', data)
+      setWorkshops([]) 
     }
+  } catch (error) {
+    console.error('Error fetching workshops:', error)
   }
+}
+
 
   const handleBookWorkshop = (workshop) => {
     setSelectedWorkshop(workshop)
@@ -124,13 +134,14 @@ export default function HomeClient() {
                 </div>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {workshops.slice(0, 6).map((workshop) => (
-                    <WorkshopCard
-                      key={workshop._id}
-                      workshop={workshop}
-                      onBook={handleBookWorkshop}
-                    />
-                  ))}
+                  {Array.isArray(workshops) && workshops.slice(0, 6).map((workshop) => (
+  <WorkshopCard
+    key={workshop._id}
+    workshop={workshop}
+    onBook={handleBookWorkshop}
+  />
+))}
+
                 </div>
                 
                 <div className="text-center mt-12">

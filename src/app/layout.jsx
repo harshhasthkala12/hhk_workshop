@@ -1,3 +1,4 @@
+import './globals.css'
 export const metadata = {
   title: 'Handicrafts Workshop',
   description: 'Explore Lippan, Madhubani, Warli and more!',
